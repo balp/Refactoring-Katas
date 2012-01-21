@@ -5,3 +5,19 @@ Assumptions:
   - The GTest framework is in the directory gtest.
   - If your IDE does the compilation and linking, you should remove the first 3 lines
     in the run-once.sh file.
+
+
+CMake version:
+
+  - The GTest framework is in the directory gtest.
+  - CMake 2.8 or later in path
+  
+Instructions:
+
+ Unix/Mac OS + Make:
+
+   $ mkdir build
+   $ cd build
+   $ cmake ..
+   $ make test
+
