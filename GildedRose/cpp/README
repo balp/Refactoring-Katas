@@ -1,16 +1,9 @@
 run-once.sh runs your tests once
 
 Assumptions:
-  - make and a C++ compiler (like gcc) is installed on your system and is in the PATH
+  - CMake 2.8 or later installed (probable works in 2.6, but not tested)
+  - A working C++ enviroment
   - The GTest framework is in the directory gtest.
-  - If your IDE does the compilation and linking, you should remove the first 3 lines
-    in the run-once.sh file.
-
-
-CMake version:
-
-  - The GTest framework is in the directory gtest.
-  - CMake 2.8 or later in path
   
 Instructions:
 
@@ -19,5 +12,5 @@ Instructions:
    $ mkdir build
    $ cd build
    $ cmake ..
-   $ make test
+   $ ctest -VV
 

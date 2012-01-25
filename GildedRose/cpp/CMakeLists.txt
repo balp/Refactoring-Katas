@@ -6,16 +6,18 @@ cmake_minimum_required (VERSION 2.8 )
 project ( GildedRose )
 ENABLE_TESTING()
 
-include_directories( gtest/include )
+include_directories( gtest/include ${CMAKE_CURRENT_SOURCE_DIR} )
 add_subdirectory( gtest )
 
-add_executable ( GildedRose
+add_executable ( GildedRoseTest
 	${GTEST}
+	GildedRose.h
 	GildedRose.cc
+	GildedRoseTest.cc
 )
 
-target_link_libraries( GildedRose gtest_main )
+target_link_libraries( GildedRoseTest gtest_main )
 
 add_test( NAME gtest_gildedrose
-	COMMAND "$<TARGET_FILE:GildedRose>"
+	COMMAND "$<TARGET_FILE:GildedRoseTest>"
 )
