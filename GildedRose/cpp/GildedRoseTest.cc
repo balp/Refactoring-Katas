@@ -246,3 +246,14 @@ TEST_F(GildedRoseTests, MakeSureBackstagePassAddsQualityAfterConcert) {
     EXPECT_EQ(0, app->items[5].quality);
 }
 
+/**
+ * Requirement #10:
+ * See that a Conjured item degrade twice as fast
+ */
+TEST_F(GildedRoseTests, DISABLED_MakeSureConjuredDegradeFaster) {
+    EXPECT_EQ("Conjured Mana Cake", app->items[6].name);
+    EXPECT_EQ(3, app->items[6].sellIn);
+    EXPECT_EQ(6, app->items[6].quality);
+    app->updateQuality();
+    EXPECT_EQ(4, app->items[6].quality);
+}
