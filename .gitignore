@@ -1,0 +1,6 @@
+
+build/
+*.swp
+*~
+GildedRose/cpp/gtest
+GildedRose/cpp/gtest-1.6.0
