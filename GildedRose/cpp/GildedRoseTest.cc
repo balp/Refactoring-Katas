@@ -33,23 +33,23 @@
  */
 class GildedRoseTests : public ::testing::Test {
     protected:
-	vector<Item> items;
-	GildedRose* app;
+        vector<Item> items;
+        GildedRose* app;
 
-	virtual void SetUp() {
-	    items.push_back(Item("Foo", 1, 3));
-	    items.push_back(Item("+5 Dexterity Vest", 10, 20));
-	    items.push_back(Item("Aged Brie", 2, 0));
-	    items.push_back(Item("Elixir of the Mongoose", 5, 7));
-	    items.push_back(Item("Sulfuras, Hand of Ragnaros", 0, 80));
-	    items.push_back(Item("Backstage passes to a TAFKAL80ETC concert", 15, 20));
-	    items.push_back(Item("Conjured Mana Cake", 3, 6));
-	    app = new GildedRose(items);
-	}
+        virtual void SetUp() {
+            items.push_back(Item("Foo", 1, 3));
+            items.push_back(Item("+5 Dexterity Vest", 10, 20));
+            items.push_back(Item("Aged Brie", 2, 0));
+            items.push_back(Item("Elixir of the Mongoose", 5, 7));
+            items.push_back(Item("Sulfuras, Hand of Ragnaros", 0, 80));
+            items.push_back(Item("Backstage passes to a TAFKAL80ETC concert", 15, 20));
+            items.push_back(Item("Conjured Mana Cake", 3, 6));
+            app = new GildedRose(items);
+        }
 
-	virtual void TearDown() {
-	    delete app;
-	}
+        virtual void TearDown() {
+            delete app;
+        }
 };
 /**
  * Test that items have a name, expected from customer but no requierment.
@@ -145,7 +145,7 @@ TEST_F(GildedRoseTests, MakeSureQualityLessThanFifty) {
     EXPECT_EQ("Aged Brie", app->items[2].name);
     EXPECT_EQ(0, app->items[2].quality);
     for(int i = 1; i < 50 ; ++i) {
-	app->updateQuality();
+        app->updateQuality();
     }
     EXPECT_EQ(50, app->items[2].quality); 
     app->updateQuality();
@@ -199,7 +199,7 @@ TEST_F(GildedRoseTests, MakeSureBackstagePassAddsQualityTenDays) {
     EXPECT_EQ(20, app->items[5].quality);
     EXPECT_EQ(15, app->items[5].sellIn);
     for(int i = 0 ; i < 5 ; ++i) {
-	app->updateQuality();
+        app->updateQuality();
     }
     EXPECT_EQ(10, app->items[5].sellIn);
     EXPECT_EQ(25, app->items[5].quality);
@@ -218,7 +218,7 @@ TEST_F(GildedRoseTests, MakeSureBackstagePassAddsQualityFiveDays) {
     EXPECT_EQ(20, app->items[5].quality);
     EXPECT_EQ(15, app->items[5].sellIn);
     for(int i = 0 ; i < 10 ; ++i) {
-	app->updateQuality();
+        app->updateQuality();
     }
     EXPECT_EQ(5, app->items[5].sellIn);
     EXPECT_EQ(35, app->items[5].quality);
@@ -237,7 +237,7 @@ TEST_F(GildedRoseTests, MakeSureBackstagePassAddsQualityAfterConcert) {
     EXPECT_EQ(20, app->items[5].quality);
     EXPECT_EQ(15, app->items[5].sellIn);
     for(int i = 0 ; i < 15 ; ++i) {
-	app->updateQuality();
+        app->updateQuality();
     }
     EXPECT_EQ(0, app->items[5].sellIn);
     EXPECT_EQ(50, app->items[5].quality);
