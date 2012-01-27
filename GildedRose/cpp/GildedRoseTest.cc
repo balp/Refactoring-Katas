@@ -33,17 +33,17 @@
  */
 class GildedRoseTests : public ::testing::Test {
     protected:
-        vector<Item> items;
+        std::vector< std::shared_ptr<Item> > items;
         GildedRose* app;
 
         virtual void SetUp() {
-            items.push_back(Item("Foo", 1, 3));
-            items.push_back(Item("+5 Dexterity Vest", 10, 20));
-            items.push_back(Item("Aged Brie", 2, 0));
-            items.push_back(Item("Elixir of the Mongoose", 5, 7));
-            items.push_back(Item("Sulfuras, Hand of Ragnaros", 0, 80));
-            items.push_back(Item("Backstage passes to a TAFKAL80ETC concert", 15, 20));
-            items.push_back(Item("Conjured Mana Cake", 3, 6));
+            items.push_back(makeItem("Foo", 1, 3));
+            items.push_back(makeItem("+5 Dexterity Vest", 10, 20));
+            items.push_back(makeItem("Aged Brie", 2, 0));
+            items.push_back(makeItem("Elixir of the Mongoose", 5, 7));
+            items.push_back(makeItem("Sulfuras, Hand of Ragnaros", 0, 80));
+            items.push_back(makeItem("Backstage passes to a TAFKAL80ETC concert", 15, 20));
+            items.push_back(makeItem("Conjured Mana Cake", 3, 6));
             app = new GildedRose(items);
         }
 
@@ -55,7 +55,7 @@ class GildedRoseTests : public ::testing::Test {
  * Test that items have a name, expected from customer but no requierment.
  */
 TEST_F(GildedRoseTests, HaveName) {
-    EXPECT_EQ("Foo", app->items[0].name);
+    EXPECT_EQ("Foo", app->items[0]->name);
 }
 
 /**
@@ -63,7 +63,7 @@ TEST_F(GildedRoseTests, HaveName) {
  * Make sure the item have a sellIn field.
  */
 TEST_F(GildedRoseTests, HaveSellIn) {
-    EXPECT_EQ(1, app->items[0].sellIn);
+    EXPECT_EQ(1, app->items[0]->sellIn());
 }
 
 /**
@@ -71,7 +71,7 @@ TEST_F(GildedRoseTests, HaveSellIn) {
  * Make sure the item have a quality field.
  */
 TEST_F(GildedRoseTests, HaveQuality) {
-    EXPECT_EQ(3, app->items[0].quality);
+    EXPECT_EQ(3, app->items[0]->quality());
 }
 
 /**
@@ -79,9 +79,9 @@ TEST_F(GildedRoseTests, HaveQuality) {
  * Make sure sellIn lowers at the end of the day.
  */
 TEST_F(GildedRoseTests, MakeSureSellInLowersOne) {
-    EXPECT_EQ(1, app->items[0].sellIn);
+    EXPECT_EQ(1, app->items[0]->sellIn());
     app->updateQuality();
-    EXPECT_EQ(0, app->items[0].sellIn);
+    EXPECT_EQ(0, app->items[0]->sellIn());
 }
 
 /**
@@ -89,9 +89,9 @@ TEST_F(GildedRoseTests, MakeSureSellInLowersOne) {
  * Make sure quality lowers at the end of the day.
  */
 TEST_F(GildedRoseTests, MakeSureQualityInLowersOne) {
-    EXPECT_EQ(3, app->items[0].quality);
+    EXPECT_EQ(3, app->items[0]->quality());
     app->updateQuality();
-    EXPECT_EQ(2, app->items[0].quality);
+    EXPECT_EQ(2, app->items[0]->quality());
 }
 
 /**
@@ -99,11 +99,11 @@ TEST_F(GildedRoseTests, MakeSureQualityInLowersOne) {
  * Make sure quality lowers dublle speed after sellIn < 0
  */
 TEST_F(GildedRoseTests, MakeSureQualityLowersTwiceAsFast) {
-    EXPECT_EQ(3, app->items[0].quality);
+    EXPECT_EQ(3, app->items[0]->quality());
     app->updateQuality();
-    EXPECT_EQ(0, app->items[0].sellIn); // Make sure we have the right item
+    EXPECT_EQ(0, app->items[0]->sellIn()); // Make sure we have the right item
     app->updateQuality();
-    EXPECT_EQ(0, app->items[0].quality);
+    EXPECT_EQ(0, app->items[0]->quality());
 }
 
 /**
@@ -113,13 +113,13 @@ TEST_F(GildedRoseTests, MakeSureQualityLowersTwiceAsFast) {
  * We limit this to update for now, no getters or setters in the interface
  */
 TEST_F(GildedRoseTests, MakeSureQualityAboveZero) {
-    EXPECT_EQ(3, app->items[0].quality);
+    EXPECT_EQ(3, app->items[0]->quality());
     app->updateQuality();
-    EXPECT_EQ(2, app->items[0].quality); 
+    EXPECT_EQ(2, app->items[0]->quality()); 
     app->updateQuality();
-    EXPECT_EQ(0, app->items[0].quality);
+    EXPECT_EQ(0, app->items[0]->quality());
     app->updateQuality();
-    EXPECT_EQ(0, app->items[0].quality);
+    EXPECT_EQ(0, app->items[0]->quality());
 }
 
 /**
@@ -129,10 +129,10 @@ TEST_F(GildedRoseTests, MakeSureQualityAboveZero) {
  * We limit this to update for now, no getters or setters in the interface
  */
 TEST_F(GildedRoseTests, MakeSureBrieAddsToQuality) {
-    EXPECT_EQ("Aged Brie", app->items[2].name);
-    EXPECT_EQ(0, app->items[2].quality);
+    EXPECT_EQ("Aged Brie", app->items[2]->name);
+    EXPECT_EQ(0, app->items[2]->quality());
     app->updateQuality();
-    EXPECT_EQ(1, app->items[2].quality); 
+    EXPECT_EQ(1, app->items[2]->quality()); 
 }
 
 /**
@@ -142,14 +142,14 @@ TEST_F(GildedRoseTests, MakeSureBrieAddsToQuality) {
  * We limit this to update for now, no getters or setters in the interface
  */
 TEST_F(GildedRoseTests, MakeSureQualityLessThanFifty) {
-    EXPECT_EQ("Aged Brie", app->items[2].name);
-    EXPECT_EQ(0, app->items[2].quality);
-    for(int i = 1; i < 50 ; ++i) {
+    EXPECT_EQ("Aged Brie", app->items[2]->name);
+    EXPECT_EQ(0, app->items[2]->quality());
+    for(int i = 1; i <= 50 ; ++i) {
         app->updateQuality();
     }
-    EXPECT_EQ(50, app->items[2].quality); 
+    EXPECT_EQ(50, app->items[2]->quality()); 
     app->updateQuality();
-    EXPECT_EQ(50, app->items[2].quality); 
+    EXPECT_EQ(50, app->items[2]->quality()); 
 }
 
 /**
@@ -158,22 +158,22 @@ TEST_F(GildedRoseTests, MakeSureQualityLessThanFifty) {
  *
  */
 TEST_F(GildedRoseTests, MakeSureSulfrasKeepsSellIn) {
-    EXPECT_EQ("Sulfuras, Hand of Ragnaros", app->items[4].name);
-    EXPECT_EQ(0, app->items[4].sellIn);
+    EXPECT_EQ("Sulfuras, Hand of Ragnaros", app->items[4]->name);
+    EXPECT_EQ(0, app->items[4]->sellIn());
     app->updateQuality();
-    EXPECT_EQ(0, app->items[4].sellIn);
+    EXPECT_EQ(0, app->items[4]->sellIn());
 }
 
 /**
  * Requirement #8:
- * Sulfuras should keep quality
+ * Sulfuras should keep quality, and stay at max 50
  *
  */
 TEST_F(GildedRoseTests, MakeSureSulfrasKeepsQuality) {
-    EXPECT_EQ("Sulfuras, Hand of Ragnaros", app->items[4].name);
-    EXPECT_EQ(80, app->items[4].quality);
+    EXPECT_EQ("Sulfuras, Hand of Ragnaros", app->items[4]->name);
+    EXPECT_EQ(50, app->items[4]->quality());
     app->updateQuality();
-    EXPECT_EQ(80, app->items[4].quality);
+    EXPECT_EQ(50, app->items[4]->quality());
 }
 
 /**
@@ -182,11 +182,11 @@ TEST_F(GildedRoseTests, MakeSureSulfrasKeepsQuality) {
  *
  */
 TEST_F(GildedRoseTests, MakeSureBackstagePassAddsQuality) {
-    EXPECT_EQ("Backstage passes to a TAFKAL80ETC concert", app->items[5].name);
-    EXPECT_EQ(20, app->items[5].quality);
-    EXPECT_EQ(15, app->items[5].sellIn);
+    EXPECT_EQ("Backstage passes to a TAFKAL80ETC concert", app->items[5]->name);
+    EXPECT_EQ(20, app->items[5]->quality());
+    EXPECT_EQ(15, app->items[5]->sellIn());
     app->updateQuality();
-    EXPECT_EQ(21, app->items[5].quality);
+    EXPECT_EQ(21, app->items[5]->quality());
 }
 
 /**
@@ -195,17 +195,17 @@ TEST_F(GildedRoseTests, MakeSureBackstagePassAddsQuality) {
  *
  */
 TEST_F(GildedRoseTests, MakeSureBackstagePassAddsQualityTenDays) {
-    EXPECT_EQ("Backstage passes to a TAFKAL80ETC concert", app->items[5].name);
-    EXPECT_EQ(20, app->items[5].quality);
-    EXPECT_EQ(15, app->items[5].sellIn);
+    EXPECT_EQ("Backstage passes to a TAFKAL80ETC concert", app->items[5]->name);
+    EXPECT_EQ(20, app->items[5]->quality());
+    EXPECT_EQ(15, app->items[5]->sellIn());
     for(int i = 0 ; i < 5 ; ++i) {
         app->updateQuality();
     }
-    EXPECT_EQ(10, app->items[5].sellIn);
-    EXPECT_EQ(25, app->items[5].quality);
+    EXPECT_EQ(10, app->items[5]->sellIn());
+    EXPECT_EQ(25, app->items[5]->quality());
     app->updateQuality();
-    EXPECT_EQ(9, app->items[5].sellIn);
-    EXPECT_EQ(27, app->items[5].quality);
+    EXPECT_EQ(9, app->items[5]->sellIn());
+    EXPECT_EQ(27, app->items[5]->quality());
 }
 
 /**
@@ -214,17 +214,17 @@ TEST_F(GildedRoseTests, MakeSureBackstagePassAddsQualityTenDays) {
  *
  */
 TEST_F(GildedRoseTests, MakeSureBackstagePassAddsQualityFiveDays) {
-    EXPECT_EQ("Backstage passes to a TAFKAL80ETC concert", app->items[5].name);
-    EXPECT_EQ(20, app->items[5].quality);
-    EXPECT_EQ(15, app->items[5].sellIn);
+    EXPECT_EQ("Backstage passes to a TAFKAL80ETC concert", app->items[5]->name);
+    EXPECT_EQ(20, app->items[5]->quality());
+    EXPECT_EQ(15, app->items[5]->sellIn());
     for(int i = 0 ; i < 10 ; ++i) {
         app->updateQuality();
     }
-    EXPECT_EQ(5, app->items[5].sellIn);
-    EXPECT_EQ(35, app->items[5].quality);
+    EXPECT_EQ(5, app->items[5]->sellIn());
+    EXPECT_EQ(35, app->items[5]->quality());
     app->updateQuality();
-    EXPECT_EQ(4, app->items[5].sellIn);
-    EXPECT_EQ(38, app->items[5].quality);
+    EXPECT_EQ(4, app->items[5]->sellIn());
+    EXPECT_EQ(38, app->items[5]->quality());
 }
 
 /**
@@ -233,17 +233,17 @@ TEST_F(GildedRoseTests, MakeSureBackstagePassAddsQualityFiveDays) {
  *
  */
 TEST_F(GildedRoseTests, MakeSureBackstagePassAddsQualityAfterConcert) {
-    EXPECT_EQ("Backstage passes to a TAFKAL80ETC concert", app->items[5].name);
-    EXPECT_EQ(20, app->items[5].quality);
-    EXPECT_EQ(15, app->items[5].sellIn);
+    EXPECT_EQ("Backstage passes to a TAFKAL80ETC concert", app->items[5]->name);
+    EXPECT_EQ(20, app->items[5]->quality());
+    EXPECT_EQ(15, app->items[5]->sellIn());
     for(int i = 0 ; i < 15 ; ++i) {
         app->updateQuality();
     }
-    EXPECT_EQ(0, app->items[5].sellIn);
-    EXPECT_EQ(50, app->items[5].quality);
+    EXPECT_EQ(0, app->items[5]->sellIn());
+    EXPECT_EQ(50, app->items[5]->quality());
     app->updateQuality();
-    EXPECT_EQ(-1, app->items[5].sellIn);
-    EXPECT_EQ(0, app->items[5].quality);
+    EXPECT_EQ(-1, app->items[5]->sellIn());
+    EXPECT_EQ(0, app->items[5]->quality());
 }
 
 /**
@@ -251,9 +251,9 @@ TEST_F(GildedRoseTests, MakeSureBackstagePassAddsQualityAfterConcert) {
  * See that a Conjured item degrade twice as fast
  */
 TEST_F(GildedRoseTests, DISABLED_MakeSureConjuredDegradeFaster) {
-    EXPECT_EQ("Conjured Mana Cake", app->items[6].name);
-    EXPECT_EQ(3, app->items[6].sellIn);
-    EXPECT_EQ(6, app->items[6].quality);
+    EXPECT_EQ("Conjured Mana Cake", app->items[6]->name);
+    EXPECT_EQ(3, app->items[6]->sellIn());
+    EXPECT_EQ(6, app->items[6]->quality());
     app->updateQuality();
-    EXPECT_EQ(4, app->items[6].quality);
+    EXPECT_EQ(4, app->items[6]->quality());
 }
