@@ -33,20 +33,33 @@
  */
 class GildedRoseTests : public ::testing::Test {
     protected:
+        /**
+         * List of items.
+         */
         std::vector< std::shared_ptr<Item> > items;
+
+        /**
+         * Pointer to the object under test.
+         */
         GildedRose* app;
 
+        /**
+         * Set up  for all the tests.
+         */
         virtual void SetUp() {
-            items.push_back(makeItem("Foo", 1, 3));
-            items.push_back(makeItem("+5 Dexterity Vest", 10, 20));
-            items.push_back(makeItem("Aged Brie", 2, 0));
-            items.push_back(makeItem("Elixir of the Mongoose", 5, 7));
-            items.push_back(makeItem("Sulfuras, Hand of Ragnaros", 0, 80));
-            items.push_back(makeItem("Backstage passes to a TAFKAL80ETC concert", 15, 20));
-            items.push_back(makeItem("Conjured Mana Cake", 3, 6));
+            items.push_back(Item::makeItem("Foo", 1, 3));
+            items.push_back(Item::makeItem("+5 Dexterity Vest", 10, 20));
+            items.push_back(Item::makeItem("Aged Brie", 2, 0));
+            items.push_back(Item::makeItem("Elixir of the Mongoose", 5, 7));
+            items.push_back(Item::makeItem("Sulfuras, Hand of Ragnaros", 0, 80));
+            items.push_back(Item::makeItem("Backstage passes to a TAFKAL80ETC concert", 15, 20));
+            items.push_back(Item::makeItem("Conjured Mana Cake", 3, 6));
             app = new GildedRose(items);
         }
 
+        /**
+         * Clean up memory used in SetUp()
+         */
         virtual void TearDown() {
             delete app;
         }
