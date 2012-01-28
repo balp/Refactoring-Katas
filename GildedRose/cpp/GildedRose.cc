@@ -7,14 +7,59 @@ public:
     virtual int qualityChange() {
         return 0;
     }
+    virtual void updateSellIn() {
+    }
+    virtual void updateQuality() {}
+    void setQuality(int quality) {}
+    
     SulfurasItem(std::string name, int sellIn, int quality) : Item(name, sellIn, quality) 
     {}
 };
 
+class BrieItem : public Item
+{
+public:
+    BrieItem(std::string name, int sellIn, int quality) : Item(name, sellIn, quality) 
+    {}
+    virtual int qualityChange() {
+        return 1;
+    }
+    
+};
+
+class BackstagePassItem : public Item
+{
+public:
+    BackstagePassItem(std::string name, int sellIn, int quality) : Item(name, sellIn, quality) 
+    {}
+    virtual int qualityChange() {
+        if(m_sellIn > 10) {
+            return 1;
+        }
+        if(m_sellIn > 5) {
+            return 2;
+        }
+        if(m_sellIn > 0) {
+            return 3;
+        }
+        if(m_sellIn == 0) {
+            return -m_quality;
+        }
+        return 0;
+    }
+    
+};
+
 Item* Item::makeItem(std::string name, int sellIn, int quality)
 {
+    if(name.find("Backstage") != name.npos) {
+        return new BackstagePassItem(name, sellIn, quality);
+    }
     if(name.find("Sulfuras") != name.npos) {
         return new SulfurasItem(name, sellIn, quality);
+    }
+    if(name.find("Brie") != name.npos) {
+        return new BrieItem(name, sellIn, quality);
     }
     return new Item(name, sellIn, quality);
 }
@@ -34,73 +79,11 @@ void example()
 
 void GildedRose::updateQuality()
 {
-    for (int i = 0; i < items.size(); i++)
+    for (std::vector<Item*>::iterator iter = items.begin();
+         iter != items.end();
+         ++iter)
     {
-        if (items[i]->name != "Aged Brie" && items[i]->name != "Backstage passes to a TAFKAL80ETC concert")
-        {
-            if (items[i]->quality > 0)
-            {
-                items[i]->quality = items[i]->quality + items[i]->qualityChange();
-            }
-        }
-        else
-        {
-            if (items[i]->quality < 50)
-            {
-                items[i]->quality = items[i]->quality + 1;
-                
-                if (items[i]->name == "Backstage passes to a TAFKAL80ETC concert")
-                {
-                    if (items[i]->sellIn < 11)
-                    {
-                        if (items[i]->quality < 50)
-                        {
-                            items[i]->quality = items[i]->quality + 1;
-                        }
-                    }
-                    
-                    if (items[i]->sellIn < 6)
-                    {
-                        if (items[i]->quality < 50)
-                        {
-                            items[i]->quality = items[i]->quality + 1;
-                        }
-                    }
-                }
-            }
-        }
-        
-        if (items[i]->name != "Sulfuras, Hand of Ragnaros")
-        {
-            items[i]->sellIn = items[i]->sellIn - 1;
-        }
-        
-        if (items[i]->sellIn < 0)
-        {
-            if (items[i]->name != "Aged Brie")
-            {
-                if (items[i]->name != "Backstage passes to a TAFKAL80ETC concert")
-                {
-                    if (items[i]->quality > 0)
-                    {
-                        if (items[i]->name != "Sulfuras, Hand of Ragnaros")
-                        {
-                            items[i]->quality = items[i]->quality + items[i]->qualityChange();
-                        }
-                    }
-                }
-                else
-                {
-                    items[i]->quality = items[i]->quality - items[i]->quality;
-                }
-            }
-            else
-            {
-                if (items[i]->quality < 50)
-                {
-                    items[i]->quality = items[i]->quality + 1;
-                }
-            }
-        }
+        (*iter)->updateQuality();
+        (*iter)->updateSellIn();
     }
 }
