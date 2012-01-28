@@ -16,8 +16,21 @@ protected:
             return -2;
         }
         return -1;
-    }  
+    }
     
+    virtual void updateSellIn() {
+        m_sellIn -= 1;
+    }    
+
+    void setQuality(int quality) {
+        m_quality = quality;
+        if(m_quality <= 0) {
+            m_quality = 0;
+        }
+        if (m_quality >= 50) {
+            m_quality = 50;
+        }
+    }
 public:
     const std::string& name() {
         return m_name;
@@ -28,11 +41,10 @@ public:
     
     virtual void updateQuality() {
         setQuality(m_quality + qualityChange());
+        updateSellIn();
     }
     
-    virtual void updateSellIn() {
-        m_sellIn -= 1;
-    }
+
     
     int quality() {
         return m_quality;
@@ -42,15 +54,6 @@ public:
         return m_sellIn;
     }
     
-    void setQuality(int quality) {
-        m_quality = quality;
-        if(m_quality <= 0) {
-            m_quality = 0;
-        }
-        if (m_quality >= 50) {
-            m_quality = 50;
-        }
-    }
     
   
 };

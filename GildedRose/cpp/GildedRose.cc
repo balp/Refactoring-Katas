@@ -84,6 +84,5 @@ void GildedRose::updateQuality()
          ++iter)
     {
         (*iter)->updateQuality();
-        (*iter)->updateSellIn();
     }
 }
