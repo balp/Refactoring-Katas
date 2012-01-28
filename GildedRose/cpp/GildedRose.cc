@@ -50,8 +50,22 @@ public:
     
 };
 
+class ConjuredItem : public Item
+{
+public:
+    ConjuredItem(std::string name, int sellIn, int quality) : Item(name, sellIn, quality) 
+    {}
+    virtual int qualityChange() {
+        return Item::qualityChange() * 2;
+    }
+    
+};
+
 Item* Item::makeItem(std::string name, int sellIn, int quality)
 {
+    if(name.find("Conjured") != name.npos) {
+        return new ConjuredItem(name, sellIn, quality);
+    }
     if(name.find("Backstage") != name.npos) {
         return new BackstagePassItem(name, sellIn, quality);
     }
