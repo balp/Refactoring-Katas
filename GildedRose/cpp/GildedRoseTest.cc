@@ -33,7 +33,7 @@
  */
 class GildedRoseTests : public ::testing::Test {
     protected:
-        vector<Item> items;
+        std::vector<Item> items;
         GildedRose* app;
 
         virtual void SetUp() {
