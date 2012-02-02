@@ -1,24 +1,12 @@
 
 #include <vector>
-#include <string>
-
-using namespace std;
-
-class Item
-{
-public:
-    string name;
-    int sellIn;
-    int quality;
-    Item(string name, int sellIn, int quality) : name(name), sellIn(sellIn), quality(quality) 
-    {}
-};
+#include <Item.h>
 
 class GildedRose
 {
 public:
-    vector<Item> items;
-    GildedRose(vector<Item> items) : items (items) 
+    std::vector<Item> items;
+    GildedRose(std::vector<Item> items) : items (items) 
     {}
     
     void updateQuality() 
