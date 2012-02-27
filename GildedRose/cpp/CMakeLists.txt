@@ -20,8 +20,25 @@ add_executable ( GildedRoseTest
 
 target_link_libraries( GildedRoseTest gtest_main )
 
+add_executable(GildedRoseTextTests
+	GildedRose.h
+	GildedRose.cc
+	GildedRoseTextTests.cc
+)
+
+add_executable(GildedRose
+	GildedRoseUnitTests.cc
+	GildedRose.cc
+)
+
+target_link_libraries( GildedRose gtest_main )
+
 add_test( NAME gtest_gildedrose
 	COMMAND "$<TARGET_FILE:GildedRoseTest>"
+)
+
+add_test( NAME gtest_gildedrose2
+	COMMAND "$<TARGET_FILE:GildedRose>"
 )
 
 # add a target to generate API documentation with Doxygen
