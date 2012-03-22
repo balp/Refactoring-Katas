@@ -1,4 +1,6 @@
-
+/**
+ * This is the Items class, editing this wil anger the goblin in the corner
+ */
 #include <string>
 
 class Item
